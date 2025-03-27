@@ -231,6 +231,7 @@ export default function B3Nav({ closeSidebar }: B3NavProps) {
                     bgcolor: '#FFFFFF',
                     right: 14,
                     top: 22,
+                    border: '2px solid #000000',
                   },
                 }}
               >

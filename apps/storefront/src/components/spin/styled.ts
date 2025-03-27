@@ -32,7 +32,6 @@ interface SpinContextProps {
 
 const SpinContext = styled('div')<SpinContextProps>(({ height, isFlex = true }) => ({
   position: 'relative',
-  height: height || '100%',
   width: '100%',
   display: isFlex ? 'flex' : 'block',
 }));

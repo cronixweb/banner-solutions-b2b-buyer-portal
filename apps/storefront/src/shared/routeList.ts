@@ -80,6 +80,17 @@ export const routeList: (BuyerPortalRoute | RouteItem)[] = [
   },
   {
     path: '/orders',
+    name: 'Homepage',
+    subsidiariesCompanyKey: 'order',
+    wsKey: 'router-orders',
+    isMenuItem: true,
+    permissions: ordersPermissions,
+    permissionCodes: ordersPermissionCodes,
+    isTokenLogin: true,
+    idLang: 'global.navMenu.dashboard',
+  },
+  {
+    path: '/allOrders',
     name: 'My orders',
     subsidiariesCompanyKey: 'order',
     wsKey: 'router-orders',

@@ -29,6 +29,13 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 3001,
+      cors: {
+        origin: 'https://banner-solutions-b2b-site.vercel.app',
+        methods: ['GET', 'POST'],
+      },
+      headers: {
+        'Access-Control-Allow-Origin': 'https://banner-solutions-b2b-site.vercel.app'
+      },
       proxy: {
         '/bigcommerce': {
           target:

@@ -209,22 +209,53 @@ function B3FilterMore<T, Y>({
         >
           <Box onClick={handleDialogClick}>
             {!isFiltering && (
-              <IconButton
-                aria-label="edit"
-                size="medium"
-                sx={{
-                  color: customColor,
-                  ':hover': {
-                    backgroundColor: getHoverColor('#FFFFFF', 0.1),
-                  },
-                  '& svg': {
-                    width: '32px',
-                    height: '32px',
-                  },
-                }}
+              // <IconButton
+              //   aria-label="edit"
+              //   size="medium"
+              //   sx={{
+              //     color: customColor,
+              //     ':hover': {
+              //       backgroundColor: getHoverColor('#FFFFFF', 0.1),
+              //     },
+              //     '& svg': {
+              //       width: '32px',
+              //       height: '32px',
+              //     },
+              //   }}
+              // >
+              //   <FilterListIcon />
+              // </IconButton>
+
+              <CustomButton
+              size="large"
+              variant="contained"
+              sx={{
+                p: '6px 20px',
+                marginRight: '20px',
+                marginBottom: '10px',
+                background: "none",
+                boxShadow: "none",
+                border: "1px solid rgba(0,0,0,0.42)",
+                color: "black",
+                textTransform: "none",
+                fontSize: '14px',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.04)',
+                  boxShadow: 'none',
+                },
+              }}
+              onClick={handleDialogClick}
               >
-                <FilterListIcon />
-              </IconButton>
+                <FilterListIcon
+                  sx={{
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />&nbsp;
+                Filter Projects
+              </CustomButton>
             )}
             {isFiltering && (
               <IconButton

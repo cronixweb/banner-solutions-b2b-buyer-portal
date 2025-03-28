@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 import B3UI from './form/ui';
 import {
@@ -20,12 +20,18 @@ export default function B3CustomForm(props: B3UI.B3CustomFormProps) {
 
   const renderFormFields = (fields: any) =>
     fields.map((field: B3UI.B3CustomFormValue) => {
-      const { fieldType } = field;
+      const { fieldType, label } = field;
       return (
         <Grid item key={field.name} xs={field.xs || 6} id="b3-customForm-id-name">
           <>
             {['text', 'number', 'password', 'multiline'].includes(fieldType) && (
+              <>
+              <Typography
+                fontWeight={500}
+                color='#4C4C4C'
+              >{label}</Typography>
               <B3ControlTextField {...field} {...props} errors={errors} control={control} />
+              </>
             )}
             {['checkbox'].includes(fieldType) && (
               <B3ControlCheckbox

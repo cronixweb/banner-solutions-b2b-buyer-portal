@@ -9,6 +9,8 @@ import { B3Select } from '../ui';
 import B3FilterMore from './B3FilterMore';
 import B3FilterSearch from './B3FilterSearch';
 
+import AddCircleOutlineOutlined from '@mui/icons-material/AddCircleOutlineOutlined'
+
 interface SortByItemNameProps {
   valueName: string;
   labelName: string;
@@ -78,7 +80,7 @@ function B3Filter<T, Y>(props: B3FilterProps<T, Y>) {
     searchValue = '',
     resetFilterInfo,
     pcContainerWidth = '29rem',
-    pcSearchContainerWidth = '60%',
+    pcSearchContainerWidth = '35%',
     pcTotalWidth = 'unset',
   } = props;
 
@@ -112,30 +114,6 @@ function B3Filter<T, Y>(props: B3FilterProps<T, Y>) {
         >
           <Box
             sx={{
-              maxWidth: pcContainerWidth,
-              flexBasis: '100%',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <B3FilterSearch
-              handleChange={handleSearchChange}
-              w={pcSearchContainerWidth}
-              searchValue={searchValue}
-            />
-            {showB3FilterMoreIcon && (
-              <B3FilterMore
-                startPicker={startPicker}
-                endPicker={endPicker}
-                filterMoreInfo={filterMoreInfo}
-                onChange={handleFilterChange}
-                resetFilterInfo={resetFilterInfo}
-              />
-            )}
-          </Box>
-
-          <Box
-            sx={{
               display: 'flex',
               alignItems: 'center',
             }}
@@ -161,19 +139,58 @@ function B3Filter<T, Y>(props: B3FilterProps<T, Y>) {
             )}
             {customButtonConfig?.isEnabled && (
               <CustomButton
-                size="small"
+                size="large"
                 variant="contained"
                 sx={{
-                  height: '42px',
-                  p: '0 20px',
+                  p: '20px 20px',
                   ...(customButtonConfig?.customButtonStyle || {}),
+                  background: "none",
+                  boxShadow: "none",
+                  border: "1px dashed rgba(0,0,0,0.42)",
+                  color: "#4A25A9",
+                  textTransform: "none",
+                  '&:hover': {
+                    background: 'rgba(0, 0, 0, 0.04)',
+                    boxShadow: 'none',
+                  },
                 }}
                 onClick={handleCustomBtnClick}
-              >
+                >
+                <AddCircleOutlineOutlined sx={{
+                  marginRight: '8px',
+                }} />
                 {customButtonConfig?.customLabel || ''}
               </CustomButton>
             )}
             {/* <B3FilterToggleTable /> */}
+          </Box>
+
+          <Box
+            sx={{
+              maxWidth: pcContainerWidth,
+              flexBasis: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+          >
+            {showB3FilterMoreIcon && (
+              <B3FilterMore
+                startPicker={startPicker}
+                endPicker={endPicker}
+                filterMoreInfo={filterMoreInfo}
+                onChange={handleFilterChange}
+                resetFilterInfo={resetFilterInfo}
+              />
+            )}
+
+            <B3FilterSearch
+              handleChange={handleSearchChange}
+              w={pcSearchContainerWidth}
+              searchValue={searchValue}
+              placeholder='Search projects'
+              h='1.2em'
+            />
           </Box>
         </Box>
       )}

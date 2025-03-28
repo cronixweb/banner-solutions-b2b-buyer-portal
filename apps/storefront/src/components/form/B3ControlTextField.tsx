@@ -36,6 +36,7 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
     fieldId,
     isEnterTrigger,
     handleEnterClick,
+    placeholder
   } = rest;
 
   const b3Lang = useB3Lang();
@@ -63,7 +64,6 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
   const textField = {
     type: fieldType,
     name,
-    label,
     rows,
     disabled,
     multiline: fieldType === 'multiline',
@@ -71,6 +71,7 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
     fullWidth: fullWidth || true,
     required,
     size,
+    placeholder
   };
 
   const inputProps = {

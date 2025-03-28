@@ -46,7 +46,7 @@ export interface GetFilterMoreListProps {
   options?: Array<ShoppingListStatusProps>;
   rows?: string | number;
   name: string;
-  label: string;
+  label?: string;
   required: boolean;
   default: string;
   fieldType: string;
@@ -55,6 +55,7 @@ export interface GetFilterMoreListProps {
   size: string;
   maxLength?: number;
   idLang?: string;
+  placeholder?: string;
 }
 
 export const useGetFilterShoppingListStatus = () => {
@@ -126,25 +127,26 @@ export const getCreatedShoppingListFiles = (
 ): GetFilterMoreListProps[] => [
   {
     name: 'name',
-    label: b3Lang('shoppingLists.name'),
+    label: 'Create A New Project',
+    placeholder: 'Enter A New Project Name here',
     required: true,
     default: '',
     fieldType: 'text',
     xs: 12,
-    variant: 'filled',
-    size: 'small',
+    variant: 'outlined',
+    size: 'medium',
     maxLength: 200,
   },
-  {
-    name: 'description',
-    label: b3Lang('shoppingLists.description'),
-    required: false,
-    default: '',
-    fieldType: 'multiline',
-    xs: 12,
-    variant: 'filled',
-    size: 'small',
-    rows: 4,
-    maxLength: 200,
-  },
+  // {
+  //   name: 'description',
+  //   label: b3Lang('shoppingLists.description'),
+  //   required: false,
+  //   default: '',
+  //   fieldType: 'multiline',
+  //   xs: 12,
+  //   variant: 'filled',
+  //   size: 'small',
+  //   rows: 4,
+  //   maxLength: 200,
+  // },
 ];

@@ -149,6 +149,7 @@ function AddEditShoppingLists(
       handleLeftClick={handleCancelClick}
       handRightClick={handleAddUserClick}
       loading={addUpdateLoading}
+      note='Adding to a Project allows you to create a project specific list of products. You can quick buy this list, duplicate it for other projects and keep it handy for similar project requirements. You can view all your projects in My Dashboard.'
     >
       <B3CustomForm
         formFields={usersFiles}

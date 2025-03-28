@@ -56,6 +56,7 @@ export interface GetFilterMoreListProps {
   maxLength?: number;
   idLang?: string;
   placeholder?: string;
+  hidden?: boolean;
 }
 
 export const useGetFilterShoppingListStatus = () => {
@@ -137,16 +138,18 @@ export const getCreatedShoppingListFiles = (
     size: 'medium',
     maxLength: 200,
   },
-  // {
-  //   name: 'description',
-  //   label: b3Lang('shoppingLists.description'),
-  //   required: false,
-  //   default: '',
-  //   fieldType: 'multiline',
-  //   xs: 12,
-  //   variant: 'filled',
-  //   size: 'small',
-  //   rows: 4,
-  //   maxLength: 200,
-  // },
+  {
+    name: 'description',
+    label: b3Lang('shoppingLists.description'),
+    placeholder: 'Enter a short Description',
+    required: false,
+    default: '',
+    hidden: true,
+    fieldType: 'multiline',
+    xs: 12,
+    variant: 'outlined',
+    size: 'small',
+    rows: 4,
+    maxLength: 200,
+  },
 ];

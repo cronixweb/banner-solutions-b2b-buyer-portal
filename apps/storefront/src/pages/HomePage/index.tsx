@@ -24,7 +24,7 @@ function HomePage() {
         <h4>All Orders</h4>
         <a href="#/allOrders" onClick={(e) => { e.preventDefault(); navigate('/allOrders'); }}>View All</a>
     </Box>
-    <Order />
+    <Order isDashBoard={true} />
     
     <Box
     sx={{
@@ -38,7 +38,7 @@ function HomePage() {
         <h4>All Invoices</h4>
         <a href="#/invoice" onClick={(e) => { e.preventDefault(); navigate('/invoice'); }}>View All</a>
     </Box>
-    <Invoice />
+    <Invoice isDashBoard={true} />
     
     <Box
     sx={{
@@ -52,7 +52,7 @@ function HomePage() {
         <h4>All Projects</h4>
         <a href="#/shoppingLists" onClick={(e) => { e.preventDefault(); navigate('/shoppingLists'); }}>View All</a>
     </Box>
-    <ShoppingLists />
+    <ShoppingLists isDashBoard={true} />
 
    </B3Layout>);
 }

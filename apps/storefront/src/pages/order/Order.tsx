@@ -68,6 +68,7 @@ interface SearchChangeProps {
 
 interface OrderProps {
   isCompanyOrder?: boolean;
+  isDashBoard?: boolean;
 }
 
 function useData() {
@@ -103,7 +104,7 @@ function useData() {
   };
 }
 
-function Order({ isCompanyOrder = false }: OrderProps) {
+function Order({ isCompanyOrder = false, isDashBoard }: OrderProps) {
   const b3Lang = useB3Lang();
   const [isMobile] = useMobile();
   const {
@@ -350,7 +351,7 @@ function Order({ isCompanyOrder = false }: OrderProps) {
           width: '100%',
         }}
       >
-        <Box
+        {!isDashBoard && <Box
           sx={{
             width: isMobile ? '100%' : 'auto',
             display: 'flex',
@@ -388,7 +389,7 @@ function Order({ isCompanyOrder = false }: OrderProps) {
             pcContainerWidth="100%"
             pcSearchContainerWidth="100%"
           />
-        </Box>
+        </Box>}
 
         <B3PaginationTable
           columnItems={columnItems}

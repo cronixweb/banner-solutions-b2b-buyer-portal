@@ -49,7 +49,7 @@ function useData() {
   };
 }
 
-function ShoppingLists() {
+function ShoppingLists({ isDashBoard }: {isDashBoard? : boolean}) {
   const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleteItem, setDeleteItem] = useState<null | ShoppingListsItemsProps>(null);
@@ -212,20 +212,23 @@ function ShoppingLists() {
           flex: 1,
         }}
       >
-        <Typography variant="h5"
-          sx={{
-            marginBottom: '30px',
-            fontWeight: '500',
-          }}>My Projects</Typography>
+        {!isDashBoard &&
+        <>
+          <Typography variant="h5"
+            sx={{
+              marginBottom: '30px',
+              fontWeight: '500',
+            }}>My Projects</Typography>
 
-        <B3Filter
-          showB3FilterMoreIcon={isB2BUser}
-          filterMoreInfo={filterMoreInfo}
-          handleChange={handleChange}
-          handleFilterChange={handleFilterChange}
-          customButtonConfig={customItem}
-          handleFilterCustomButtonClick={handleAddShoppingListsClick}
-        />
+          <B3Filter
+            showB3FilterMoreIcon={isB2BUser}
+            filterMoreInfo={filterMoreInfo}
+            handleChange={handleChange}
+            handleFilterChange={handleFilterChange}
+            customButtonConfig={customItem}
+            handleFilterCustomButtonClick={handleAddShoppingListsClick}
+          />
+        </>}
         <B3PaginationTable
           columnItems={[]}
           ref={paginationTableRef}

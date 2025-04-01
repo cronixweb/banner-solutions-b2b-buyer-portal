@@ -101,7 +101,7 @@ function useData() {
   };
 }
 
-function Invoice() {
+function Invoice({ isDashBoard }: {isDashBoard?: boolean}) {
   const currentDate = new Date().getTime();
   const b3Lang = useB3Lang();
 
@@ -841,7 +841,7 @@ function Invoice() {
           position: 'relative',
         }}
       >
-        <Box
+        {!isDashBoard && <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -937,7 +937,7 @@ function Invoice() {
               })}
             </Typography>
           </Box>
-        </Box>
+        </Box>}
         <B3PaginationTable
           ref={paginationTableRef}
           columnItems={columnAllItems}

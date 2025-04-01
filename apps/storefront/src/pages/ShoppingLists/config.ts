@@ -89,11 +89,20 @@ export const useGetFilterMoreList = () => {
   return (submitShoppingListPermission: boolean, createdByUsers: CreatedByUsers) => {
     const newCreatedByUsers =
       createdByUsers?.createdByUser?.results.map((item) => ({
-        createdBy: `${item.firstName} ${item.lastName} (${item.email})`,
+        createdBy: `${item.firstName} ${item.lastName}`,
       })) || [];
 
     return [
       {
+        name: 'date',
+        required: false,
+        default: '',
+        fieldType: 'date',
+        xs: 12,
+        variant: 'filled',
+        size: 'small',
+        label: 'Date',
+      },{
         name: 'createdBy',
         required: false,
         default: '',
@@ -104,20 +113,9 @@ export const useGetFilterMoreList = () => {
           value: 'createdBy',
         },
         xs: 12,
-        variant: 'filled',
+        variant: 'outlined',
         size: 'small',
         label: b3Lang('global.shoppingLists.filter.createdBy'),
-      },
-      {
-        name: 'status',
-        required: false,
-        default: '',
-        fieldType: 'dropdown',
-        options: getFilterShoppingListStatus(submitShoppingListPermission),
-        xs: 12,
-        variant: 'filled',
-        size: 'small',
-        label: b3Lang('global.shoppingLists.filter.status'),
       },
     ];
   };

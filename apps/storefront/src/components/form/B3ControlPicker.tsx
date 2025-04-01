@@ -81,6 +81,7 @@ export default function B3ControlPicker({ control, errors, ...rest }: Form.B3UIP
                 label={label}
                 inputFormat={inputFormat}
                 {...muixPickerProps}
+                props
                 renderInput={(params) => (
                   <TextField
                     {...params}

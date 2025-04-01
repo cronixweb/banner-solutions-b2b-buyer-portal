@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 import B3UI from './form/ui';
 import {
@@ -15,14 +15,22 @@ import {
   B3ControlTextField,
 } from './form';
 
-export default function B3CustomForm(props: B3UI.B3CustomFormProps) {
+export default function B3CustomRowForm(props: B3UI.B3CustomFormProps) {
   const { formFields, errors, control, getValues, setValue, setError } = props;
 
   const renderFormFields = (fields: any) =>
     fields.map((field: B3UI.B3CustomFormValue) => {
       const { fieldType, label, hidden } = field;
       return (
-        <Grid direction='column' item key={field.name} xs={field.xs || 6} id="b3-customForm-id-name">
+        <Box
+          sx={{
+            width: '50%',
+            px: 2,
+            pt: 2
+          }}
+          key={field.name}
+          id="b3-customForm-id-name"
+          >
           <>
             {['text', 'number', 'password', 'multiline'].includes(fieldType) && (
               <>
@@ -45,9 +53,22 @@ export default function B3CustomForm(props: B3UI.B3CustomFormProps) {
               <B3ControlRadioGroup {...field} errors={errors} control={control} />
             )}
             {['dropdown'].includes(fieldType) && (
+              <>
+              {!hidden && <Typography
+                fontSize={14}
+                fontWeight={500}
+                color='#4C4C4C'
+              >{label}</Typography>}
               <B3ControlSelect {...field} errors={errors} control={control} setValue={setValue} />
+              </>
             )}
             {['date'].includes(fieldType) && (
+              <>
+              {!hidden && <Typography
+                fontSize={14}
+                fontWeight={500}
+                color='#4C4C4C'
+              >{label}</Typography>}
               <B3ControlPicker
                 {...field}
                 errors={errors}
@@ -55,6 +76,7 @@ export default function B3CustomForm(props: B3UI.B3CustomFormProps) {
                 setValue={setValue}
                 getValues={getValues}
               />
+              </>
             )}
             {['files'].includes(fieldType) && (
               <B3ControlFileUpload
@@ -109,7 +131,7 @@ export default function B3CustomForm(props: B3UI.B3CustomFormProps) {
               />
             )}
           </>
-        </Grid>
+        </Box>
       );
     });
 

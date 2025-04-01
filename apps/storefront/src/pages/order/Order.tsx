@@ -31,6 +31,7 @@ import {
   sortKeys,
 } from './config';
 import { OrderItemCard } from './OrderItemCard';
+import { getOrders } from '@/shared/service/bannerApi/orders';
 
 interface CompanyInfoProps {
   companyId: string;
@@ -336,6 +337,8 @@ function Order({ isCompanyOrder = false }: OrderProps) {
       companyIds: newCompanyIds,
     });
   };
+
+  getOrders("2022-10-26", "2023-06-26", [], 2).then(data => console.log(data));
 
   return (
     <B3Spin isSpinning={isRequestLoading}>

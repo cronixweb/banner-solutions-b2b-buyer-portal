@@ -190,7 +190,7 @@ export default function B3Dialog<T>({
             autoFocus
             disabled={disabledSaveBtn || loading}
           >
-            Create
+            {rightSizeBtn}
           </CustomButton>
 
         </DialogContent>

@@ -488,7 +488,7 @@
   "shoppingList.table.price": "Price",
   "shoppingList.table.quantity": "Qty",
   "shoppingList.table.total": "Total",
-  "shoppingList.table.totalProductCount": "{quantity} products",
+  "shoppingList.table.totalProductCount": "Total products: {quantity}",
   "shoppingList.table.itemsPerPage": "Items per page",
   "shoppingList.table.noProductsFound": "No products found",
   "shoppingList.shoppingDetailCard.price": "Price: {price}",

@@ -98,10 +98,7 @@ function B3FilterSearch({
           )
         }
       />
-
-    </Paper>
-
-    <SearchIcon
+      <SearchIcon
         sx={{
           p: '6px 10px 14px 10px',
           color: 'rgba(0, 0, 0, 0.8)',
@@ -109,6 +106,9 @@ function B3FilterSearch({
           marginLeft: '-5px',
         }}
       />
+    </Paper>
+
+    
     </>
   );
 }

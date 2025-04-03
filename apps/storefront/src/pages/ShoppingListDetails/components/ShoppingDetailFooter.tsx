@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from 'react';
 import { useB3Lang } from '@b3/lang';
-import { ArrowDropDown, Delete } from '@mui/icons-material';
-import { Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { ArrowDropDown, Delete, DeleteOutline } from '@mui/icons-material';
+import { Box, Checkbox, Grid, Menu, MenuItem, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
 import { v1 as uuid } from 'uuid';
 
@@ -32,6 +32,7 @@ import {
 } from '@/utils/b3Product/shared/config';
 import b3TriggerCartNumber from '@/utils/b3TriggerCartNumber';
 import { callCart, deleteCartData, updateCart } from '@/utils/cartUtils';
+import B3FilterSearch from '@/components/filter/B3FilterSearch';
 
 interface ShoppingDetailFooterProps {
   shoppingListInfo: any;
@@ -46,6 +47,9 @@ interface ShoppingDetailFooterProps {
   customColor: string;
   isCanEditShoppingList: boolean;
   role: string | number;
+  isSelectAll?: boolean;
+  setSelectAll?: (s: boolean) => void;
+  setSearchTerm?: (s: string) => void;
 }
 
 interface ProductInfoProps {
@@ -115,6 +119,9 @@ function ShoppingDetailFooter(props: ShoppingDetailFooterProps) {
     customColor,
     isCanEditShoppingList,
     role,
+    isSelectAll,
+    setSelectAll,
+    setSearchTerm,
   } = props;
 
   const b2bShoppingListActionsPermission = isB2BUser ? shoppingListCreateActionsPermission : true;
@@ -514,29 +521,16 @@ function ShoppingDetailFooter(props: ShoppingDetailFooterProps) {
   return (
     <Grid
       sx={{
-        position: 'fixed',
-        bottom: isMobile && isAgenting ? '52px' : 0,
-        left: 0,
         backgroundColor: '#fff',
         width: '100%',
-        padding: isMobile ? '0 0 1rem 0' : '0 40px 1rem 40px',
         height: isMobile ? '8rem' : 'auto',
-        marginLeft: 0,
         display: 'flex',
-        flexWrap: 'nowrap',
-        zIndex: '999',
+        mt: 0,
+        ml:0,
       }}
       container
       spacing={2}
     >
-      <Grid
-        item
-        sx={{
-          display: isMobile ? 'none' : 'block',
-          width: '290px',
-          paddingLeft: '20px',
-        }}
-      />
       <Grid
         item
         sx={
@@ -547,13 +541,13 @@ function ShoppingDetailFooter(props: ShoppingDetailFooterProps) {
             : {
                 flexBasis: '690px',
                 flexGrow: 1,
+                paddingLeft: '0 !important',
               }
         }
       >
         <Box
           sx={{
             width: '100%',
-            pr: '20px',
             display: 'flex',
             zIndex: '999',
             justifyContent: 'space-between',
@@ -571,25 +565,32 @@ function ShoppingDetailFooter(props: ShoppingDetailFooterProps) {
               quantity: checkedArr.length,
             })}
           </Typography>
+
+          {/* <Typography
+                fontSize={12}
+                fontWeight={500}
+                sx={{
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  color: '#442DA4',
+                }}
+                onClick={ () => setSelectAll && setSelectAll(!isSelectAll) }
+              >
+                <Checkbox
+                  size='small'
+                  checked={
+                    isSelectAll
+                  }
+                /> 
+              Select All Products</Typography> */}
           <Box
             sx={{
               display: 'flex',
+              justifyContent: 'flex-end',
               alignItems: 'center',
               flexWrap: isMobile ? 'wrap' : 'nowrap',
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                fontSize: '16px',
-                fontWeight: '700',
-                color: '#000000',
-              }}
-            >
-              {b3Lang('shoppingList.footer.subtotal', {
-                subtotal: currencyFormat(selectedSubTotal),
-              })}
-            </Typography>
             <Box
               sx={{
                 display: 'flex',
@@ -601,27 +602,74 @@ function ShoppingDetailFooter(props: ShoppingDetailFooterProps) {
               {!allowJuniorPlaceOrder &&
                 isCanEditShoppingList &&
                 b2bShoppingListActionsPermission && (
-                  <CustomButton
+                  <Typography
+                    fontSize={12}
+                    fontWeight={500}
                     sx={{
-                      padding: '5px',
-                      border: `1px solid ${customColor || '#1976d2'}`,
-                      margin: isMobile ? '0 1rem 0 0' : '0 1rem',
-                      minWidth: 'auto',
+                      textDecoration: 'underline',
+                      color: checkedArr.length > 0 ? customColor : '#999999',
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      mr: 3,
                     }}
-                    disabled={shoppingListInfo?.status === 40}
+                    onClick={() => {
+                      checkedArr.length > 0 ? setDeleteOpen(true) : null;
+                    }}
                   >
-                    <Delete
+                    <DeleteOutline
                       color="primary"
                       sx={{
-                        color: customColor,
-                      }}
-                      onClick={() => {
-                        setDeleteOpen(true);
+                        color: checkedArr.length > 0 ? customColor : '#999999',
+                        width: 16,
+                        height: 16
                       }}
                     />
-                  </CustomButton>
+                    Delete Product
+                  </Typography>
                 )}
-              {buttonList.length ? (
+
+                <CustomButton
+                  variant="outlined"
+                  ref={ref}
+                  sx={{
+                    marginRight: isMobile ? '1rem' : 0,
+                    width: isMobile ? '100%' : 'auto',
+                    textTransform: 'none',
+                    fontSize: 12,
+                    fontWeight: 400,
+                    mr: 3,
+                    color: 'black',
+                  }}
+                >
+                  Add Product
+                </CustomButton>
+
+                <CustomButton
+                  variant="contained"
+                  onClick={buttons.adSelectedToCart.handleClick}
+                  ref={ref}
+                  sx={{
+                    marginRight: '1rem',
+                    width: isMobile ? '100%' : 'auto',
+                    textTransform: 'none',
+                    fontSize: 12,
+                    fontWeight: 400,
+                  }}
+                >
+                  Add to Cart
+                </CustomButton>
+
+                {/* <B3FilterSearch
+                  searchBGColor="rgba(0, 0, 0, 0.06)"
+                  w='30%'
+                  h={20}
+                  handleChange={(e) => {
+                    setSearchTerm && setSearchTerm(e);
+                  }}
+                  placeholder='Search within project'
+                /> */}
+              {/* {buttonList.length ? (
                 <Box
                   sx={{
                     display: 'flex',
@@ -681,25 +729,11 @@ function ShoppingDetailFooter(props: ShoppingDetailFooterProps) {
                     </>
                   )}
                 </Box>
-              ) : null}
+              ) : null} */}
             </Box>
           </Box>
         </Box>
       </Grid>
-      <Grid
-        item
-        sx={
-          isMobile
-            ? {
-                flexBasis: '100%',
-                display: isMobile ? 'none' : 'block',
-              }
-            : {
-                flexBasis: '340px',
-                display: isMobile ? 'none' : 'block',
-              }
-        }
-      />
     </Grid>
   );
 }

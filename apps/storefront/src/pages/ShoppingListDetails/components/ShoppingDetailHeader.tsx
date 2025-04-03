@@ -188,9 +188,11 @@ function ShoppingDetailHeader(props: ShoppingDetailHeaderProps) {
             }}
           >
             <Typography
-              variant="h4"
+              variant="h5"
+              fontWeight={500}
               sx={{
                 marginRight: '1rem',
+                marginBottom: '1rem',
                 wordBreak: 'break-all',
               }}
             >
@@ -218,18 +220,70 @@ function ShoppingDetailHeader(props: ShoppingDetailHeaderProps) {
               {shoppingListInfo?.description}
             </Typography>
             {isB2BUser && (
-              <StyledCreateName>
+              <StyledCreateName sx={{
+                display: 'inline'
+              }}>
+                <Typography
+                  fontSize={14}
+                  sx={{
+                    display:'inline'
+                  }}
+                >
+                  {b3Lang('shoppingList.header.createdBy')} &nbsp;
+                </Typography>
                 <Typography
                   variant="subtitle2"
                   sx={{
                     marginRight: '0.5rem',
+                    display: 'inline'
                   }}
                 >
-                  {b3Lang('shoppingList.header.createdBy')}
+                  {`${customerInfo?.firstName || ''} ${customerInfo?.lastName || ''}`}
                 </Typography>
-                <span>{`${customerInfo?.firstName || ''} ${customerInfo?.lastName || ''}`}</span>
               </StyledCreateName>
-            )}
+            )} 
+            
+            <strong>|</strong> 
+            
+            <Typography
+              fontSize={14}
+              sx={{
+                display:'inline'
+              }}
+            >
+              &nbsp; Created On: &nbsp;
+            </Typography>
+
+            <Typography
+              variant="subtitle2"
+              sx={{
+                marginRight: '0.5rem',
+                display: 'inline'
+              }}
+            >
+              {"May 7, 2019"}
+            </Typography>
+
+            <strong>|</strong> 
+
+            <Typography
+              fontSize={14}
+              sx={{
+                display:'inline'
+              }}
+            >
+              &nbsp; Total Products: &nbsp;
+            </Typography>
+
+            <Typography
+              variant="subtitle2"
+              sx={{
+                marginRight: '0.5rem',
+                display: 'inline'
+              }}
+            >
+              {"2"}
+            </Typography>
           </Box>
         </Grid>
 

@@ -707,7 +707,7 @@ function ShoppingDetailTable(props: ShoppingDetailTableProps, ref: Ref<unknown>)
       >
         <Typography
           sx={{
-            fontSize: '24px',
+            fontSize: '14px',
           }}
         >
           {b3Lang('shoppingList.table.totalProductCount', {
@@ -716,7 +716,7 @@ function ShoppingDetailTable(props: ShoppingDetailTableProps, ref: Ref<unknown>)
         </Typography>
         <Typography
           sx={{
-            fontSize: '24px',
+            fontSize: '14px',
           }}
         >
           {priceHidden ? '' : `${currencyFormat(shoppingListTotalPrice || 0.0)}`}
@@ -724,11 +724,14 @@ function ShoppingDetailTable(props: ShoppingDetailTableProps, ref: Ref<unknown>)
       </Box>
       <Box
         sx={{
+          marginTop: '24px',
           marginBottom: '5px',
         }}
       >
         <B3FilterSearch
+          h={20}
           searchBGColor="rgba(0, 0, 0, 0.06)"
+          placeholder='Search within project'
           handleChange={(e) => {
             handleSearchProduct(e);
           }}

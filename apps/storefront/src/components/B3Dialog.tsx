@@ -63,17 +63,10 @@ export default function B3Dialog<T>({
   isShowBordered = true,
   showRightBtn = true,
   showLeftBtn = true,
-  maxWidth = 'lg',
-  dialogContentSx = {
-    pb: 14,
-    width: '400px',
-    display: 'flex',
-    alignSelf: 'center',
-    flexDirection: 'column',
-    px: 0
-  },
+  maxWidth = 'sm',
+  dialogContentSx = {},
   dialogSx = {},
-  fullWidth = true,
+  fullWidth = false,
   disabledSaveBtn = false,
   dialogWidth = '',
   note,
@@ -126,7 +119,7 @@ export default function B3Dialog<T>({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         id="b2b-dialog-container"
-        sx={{...customStyle}}
+        sx={customStyle}
         {...restDialogParams}
       >
         <Box
@@ -145,7 +138,7 @@ export default function B3Dialog<T>({
             fontSize={28}
             sx={
               {
-                mt: 6,
+                mt: 3,
                 textAlign: 'center',
               }
             }
@@ -175,14 +168,21 @@ export default function B3Dialog<T>({
         >
           {children}
 
+        </DialogContent>
+
+      {showRightBtn && <Box 
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          mt: 3,
+          mb: 4,
+        }}>
           <CustomButton
             variant='contained'
             size='large'
             sx={{
-              mt: 3,
-              px: 14,
-              mx:8,
               height: 48,
+              minWidth: 200,
               textTransform: 'none',
               fontSize: 13
             }}
@@ -190,11 +190,10 @@ export default function B3Dialog<T>({
             autoFocus
             disabled={disabledSaveBtn || loading}
           >
-            {rightSizeBtn}
+            {rightSizeBtn || b3Lang('global.dialog.save')}
           </CustomButton>
-
-        </DialogContent>
-
+        </Box>}
+        
         {/* <DialogActions
           sx={
             isShowBordered

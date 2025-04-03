@@ -94,15 +94,6 @@ export const useGetFilterMoreList = () => {
 
     return [
       {
-        name: 'date',
-        required: false,
-        default: '',
-        fieldType: 'date',
-        xs: 12,
-        variant: 'filled',
-        size: 'small',
-        label: 'Date',
-      },{
         name: 'createdBy',
         required: false,
         default: '',
@@ -116,6 +107,17 @@ export const useGetFilterMoreList = () => {
         variant: 'outlined',
         size: 'small',
         label: b3Lang('global.shoppingLists.filter.createdBy'),
+      },
+      {
+        name: 'status',
+        required: false,
+        default: '',
+        fieldType: 'dropdown',
+        options: getFilterShoppingListStatus(submitShoppingListPermission),
+        xs: 12,
+        variant: 'filled',
+        size: 'small',
+        label: b3Lang('global.shoppingLists.filter.status'),
       },
     ];
   };

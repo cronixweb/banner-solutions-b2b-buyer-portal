@@ -241,28 +241,7 @@ function ShoppingDetailHeader(props: ShoppingDetailHeaderProps) {
                   {`${customerInfo?.firstName || ''} ${customerInfo?.lastName || ''}`}
                 </Typography>
               </StyledCreateName>
-            )} 
-            
-            <strong>|</strong> 
-            
-            <Typography
-              fontSize={14}
-              sx={{
-                display:'inline'
-              }}
-            >
-              &nbsp; Created On: &nbsp;
-            </Typography>
-
-            <Typography
-              variant="subtitle2"
-              sx={{
-                marginRight: '0.5rem',
-                display: 'inline'
-              }}
-            >
-              {"May 7, 2019"}
-            </Typography>
+            )}
 
             <strong>|</strong> 
 
@@ -282,7 +261,7 @@ function ShoppingDetailHeader(props: ShoppingDetailHeaderProps) {
                 display: 'inline'
               }}
             >
-              {"2"}
+              {shoppingListInfo?.products.totalCount}
             </Typography>
           </Box>
         </Grid>

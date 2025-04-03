@@ -6,7 +6,7 @@
   "prettier": "@bigcommerce/eslint-config/prettier",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "build:staging": "tsc && vite build --mode staging",
     "build:tier1": "tsc && vite build --mode tier1",
     "lint": "yarn lint:dependencies && yarn lint:eslint",

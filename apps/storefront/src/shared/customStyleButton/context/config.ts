@@ -145,12 +145,12 @@ export const initState = {
     createAccountButtonText: 'CREATE ACCOUNT',
     enabled: true,
     primaryButtonColor: '#292a25',
-    signInButtonText: 'SIGN IN',
+    signInButtonText: 'Login',
   },
   loginPageDisplay: {
     displayStoreLogo: true,
     enabled: true,
-    pageTitle: 'Sign In',
+    pageTitle: 'Login',
   },
   loginPageHtml: {
     bottomHtmlRegionEnabled: false,

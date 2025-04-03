@@ -54,7 +54,7 @@ const HeadlessController = lazy(() => import('@/components/HeadlessController'))
 
 const ThemeFrame = lazy(() => import('@/components/ThemeFrame'));
 
-const FONT_URL = 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap';
+const FONT_URL = 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
 
 export default function App() {
   const showPageMask = usePageMask();

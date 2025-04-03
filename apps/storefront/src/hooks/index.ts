@@ -7,6 +7,7 @@ export { default as useDebounce } from './useDebounce';
 export { default as useGetButtonText } from './useGetButtonText';
 export * from './useGetCountry';
 export { default as useMobile } from './useMobile';
+export { default as useTablet } from './useTablet';
 export { default as useRole } from './useRole';
 export { default as useScrollBar } from './useScrollBar';
 export { default as useSetOpen } from './useSetOpen';

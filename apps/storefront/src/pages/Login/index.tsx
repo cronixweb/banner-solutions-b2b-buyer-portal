@@ -1,15 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { dispatchEvent } from '@b3/hooks';
 import { useB3Lang } from '@b3/lang';
-import { Alert, Box, ImageListItem } from '@mui/material';
+import { Alert, Box, Container, Typography } from '@mui/material';
 
 import { B3Card } from '@/components';
 import B3Spin from '@/components/spin/B3Spin';
 import { CHECKOUT_URL, PATH_ROUTES } from '@/constants';
-import { useMobile } from '@/hooks';
+import { useTablet } from '@/hooks';
 import { CustomStyleContext } from '@/shared/customStyleButton';
-import { defaultCreateAccountPanel } from '@/shared/customStyleButton/context/config';
 import { GlobalContext } from '@/shared/global';
 import { getBCForcePasswordReset } from '@/shared/service/b2b';
 import { b2bLogin, bcLogin, customerLoginAPI } from '@/shared/service/bc';
@@ -22,12 +21,8 @@ import b2bLogger from '@/utils/b3Logger';
 import { getCurrentCustomerInfo } from '@/utils/loginInfo';
 
 import { type PageProps } from '../PageProps';
-
-import LoginWidget from './component/LoginWidget';
 import { isLoginFlagType, loginCheckout, LoginConfig, loginType } from './config';
 import LoginForm from './LoginForm';
-import LoginPanel from './LoginPanel';
-import { LoginContainer, LoginImage } from './styled';
 import { useLogout } from './useLogout';
 
 export default function Login(props: PageProps) {
@@ -36,14 +31,12 @@ export default function Login(props: PageProps) {
   const logout = useLogout();
 
   const isLoggedIn = useAppSelector(isLoggedInSelector);
-
   const quoteDetailToCheckoutUrl = useAppSelector(
     ({ quoteInfo }) => quoteInfo.quoteDetailToCheckoutUrl,
   );
 
   const [isLoading, setLoading] = useState(true);
-  const [isMobile] = useMobile();
-
+  const [isTablet] = useTablet();
   const [showTipInfo, setShowTipInfo] = useState<boolean>(true);
   const [flag, setLoginFlag] = useState<LoginFlagType>();
   const [loginAccount, setLoginAccount] = useState<LoginConfig>({
@@ -55,38 +48,24 @@ export default function Login(props: PageProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const {
-    state: { isCheckout, logo, registerEnabled },
+    state: { isCheckout, registerEnabled },
   } = useContext(GlobalContext);
 
   const {
     state: {
       loginPageButton,
       loginPageDisplay,
-      loginPageHtml,
       portalStyle: { backgroundColor = 'FEF9F5' },
     },
   } = useContext(CustomStyleContext);
 
-  const { createAccountButtonText, primaryButtonColor, signInButtonText } = loginPageButton;
-  const { displayStoreLogo, pageTitle } = loginPageDisplay;
-
-  const {
-    bottomHtmlRegionEnabled,
-    bottomHtmlRegionHtml,
-    createAccountPanelHtml,
-    topHtmlRegionEnabled,
-    topHtmlRegionHtml,
-  } = loginPageHtml;
+  const { primaryButtonColor, signInButtonText } = loginPageButton;
+  const { pageTitle } = loginPageDisplay;
 
   const loginInfo = {
     loginTitle: pageTitle || b3Lang('login.button.signIn'),
-    loginBtn: signInButtonText || b3Lang('login.button.signInUppercase'),
-    createAccountButtonText: createAccountButtonText || b3Lang('login.button.createAccount'),
-    btnColor: primaryButtonColor || '',
-    widgetHeadText: topHtmlRegionEnabled ? topHtmlRegionHtml : undefined,
-    widgetBodyText: createAccountPanelHtml || defaultCreateAccountPanel,
-    widgetFooterText: bottomHtmlRegionEnabled ? bottomHtmlRegionHtml : undefined,
-    logo: displayStoreLogo ? logo : undefined,
+    loginBtn: 'Login',
+    btnColor: primaryButtonColor || '#4A3C96',
   };
 
   useEffect(() => {
@@ -248,148 +227,161 @@ export default function Login(props: PageProps) {
     }
   };
 
-  const loginAndRegisterContainerWidth = registerEnabled ? '100%' : '50%';
-  const loginContainerWidth = registerEnabled ? '50%' : 'auto';
-
   const tip = flag && tipInfo(flag, loginAccount?.emailAddress);
 
   return (
-    <B3Card setOpenPage={setOpenPage}>
-      <LoginContainer paddings={isMobile ? '0' : '20px 20px'}>
-        <B3Spin isSpinning={isLoading} tip={b3Lang('global.tips.loading')} background="transparent">
+    <Container maxWidth={false} style={{padding:'0', borderBottom: '4px solid #AE8FFD', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+      {/* <B3Card setOpenPage={setOpenPage}> */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isTablet ? 'column' : 'row',
+            minHeight: 'max-content',
+            marginTop: isTablet ? '80px' : '150px',
+            marginInline: isTablet ? '0' : '10vw',
+            backgroundColor: '#fff',
+            padding: isTablet ? '20px' : '0',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            marginBottom: '5.052083333333334vw',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          {/* Left Section: Image */}
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              flex: 2,
+              backgroundImage: `url('https://cdn.bannersolutions.com/9d/86/7445ce994144ba60789525b1d4cf/login-rnd-text-959-698.png')`,
+              backgroundSize: 'cover',
               width: '100%',
-              minHeight: '400px',
-              minWidth: '343px',
+              backgroundPosition: 'bottom left',
+              position: 'relative',
+              display: isTablet ? 'none' : 'flex',
+              alignItems: 'flex-end',
+              borderRadius: '12px 0px 0px 12px',
+              padding: '30px',
             }}
           >
-            {loginInfo && (
-              <>
-                {flag && showTipInfo && (
-                  <Box
-                    sx={{
-                      padding: isMobile ? 0 : '0 5%',
-                      margin: '30px 0 0 0',
-                    }}
-                  >
-                    {tip && (
-                      <Alert severity={tip.severity} variant="filled">
-                        {tip.message}
-                      </Alert>
-                    )}
-                  </Box>
+          </Box>
+
+          {/* Right Section: Login Form */}
+          <Box
+            sx={{
+              flex: 1,
+              width: isTablet ? '100%' : '30.833333333333336vw',
+              background: ' #FFFFFF 0% 0% no-repeat padding-box',
+              boxShadow: '-2px 5px 10px #37206E1A',
+              paddingTop: '4.270833333333334vw',
+              paddingLeft: '4.166666666666667vw',
+              borderRadius: '12px',
+              paddingRight: '4.166666666666667vw',
+            }}
+          >
+            <B3Spin isSpinning={isLoading} tip={b3Lang('global.tips.loading')} background="transparent" isFlex={false}>
+              <Box sx={{ display: 'block', }}>
+                {flag && showTipInfo && tip && (
+                  <Alert severity={tip.severity} variant="filled" sx={{ mb: 2 }}>
+                    {tip.message}
+                  </Alert>
                 )}
                 {quoteDetailToCheckoutUrl && (
-                  <Alert severity="error" variant="filled">
+                  <Alert severity="error" variant="filled" sx={{ mb: 2 }}>
                     {b3Lang('login.loginText.quoteDetailToCheckoutUrl')}
                   </Alert>
                 )}
-                {loginInfo.logo && (
-                  <Box sx={{ margin: '20px 0', minHeight: '150px' }}>
-                    <LoginImage>
-                      <ImageListItem
-                        sx={{
-                          maxWidth: isMobile ? '70%' : '250px',
-                        }}
-                        onClick={() => {
-                          window.location.href = '/';
-                        }}
-                      >
-                        <img
-                          src={loginInfo.logo}
-                          alt={b3Lang('login.registerLogo')}
-                          loading="lazy"
-                        />
-                      </ImageListItem>
-                    </LoginImage>
-                  </Box>
-                )}
-                {loginInfo.widgetHeadText && (
-                  <LoginWidget
-                    sx={{
-                      minHeight: '48px',
-                      width: registerEnabled || isMobile ? '100%' : '50%',
-                    }}
-                    html={loginInfo.widgetHeadText}
-                  />
-                )}
+                <Typography
+                  variant="h4"
+                  sx={{
+                    font: 'normal normal 600 clamp(22px, 1.6666666666666667vw, 40px) / 0.625vw Inter',
+                    color: '#191919',
+                    textAlign: 'left',
+                    letterSpacing: '0.38px',
+                    paddingBottom: '2.604166666666667vw',
+                    lineHeight: '1.25',
+                  }}
+                >
+                  Log in to Your Account
+                </Typography>
+                <LoginForm
+                  loginBtn={loginInfo.loginBtn}
+                  handleLoginSubmit={handleLoginSubmit}
+                  backgroundColor={backgroundColor}
+                />
                 <Box
                   sx={{
+                    mt: 2,
+                    mb: 6,
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    flexDirection: 'column',
+
                   }}
                 >
-                  <Box
-                    sx={{
-                      bgcolor: '#FFFFFF',
-                      borderRadius: '4px',
-                      margin: '20px 0',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      width: isMobile ? 'auto' : loginAndRegisterContainerWidth,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        mb: '20px',
-                        display: 'flex',
-                        flexDirection: isMobile ? 'column' : 'row',
-                        justifyContent: 'center',
-                        width: isMobile ? 'auto' : '100%',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: isMobile ? 'auto' : loginContainerWidth,
-                          paddingRight: isMobile ? 0 : '2%',
-                          ml: '16px',
-                          mr: isMobile ? '16px' : '',
-                          pb: registerEnabled ? '' : '36px',
-                        }}
-                      >
-                        <LoginForm
-                          loginBtn={loginInfo.loginBtn}
-                          handleLoginSubmit={handleLoginSubmit}
-                          backgroundColor={backgroundColor}
-                        />
-                      </Box>
-
-                      {registerEnabled && (
-                        <Box
-                          sx={{
-                            flex: '1',
-                            paddingLeft: isMobile ? 0 : '2%',
-                          }}
-                        >
-                          <LoginPanel
-                            createAccountButtonText={loginInfo.createAccountButtonText}
-                            widgetBodyText={loginInfo.widgetBodyText}
-                          />
-                        </Box>
-                      )}
-                    </Box>
-                  </Box>
+                  <Typography variant="body2" sx={{
+                    font: 'normal normal normal clamp( 14px, 0.7291666666666667vw, 18px) / 0.8854166666666667vw Inter',
+                    color: '#383838',
+                    opacity: '1',
+                    letterSpacing: '0.63px',
+                    textAlign: 'center'
+                  }}>
+                    New User?{' '}
+                    <Link to="/register" style={{ color: '#4A3C96', textDecoration: 'underline', cursor: 'pointer' }}>
+                      Register
+                    </Link>
+                  </Typography>
                 </Box>
-                {loginInfo.widgetFooterText && (
-                  <LoginWidget
-                    sx={{
-                      minHeight: '48px',
-                      width: registerEnabled || isMobile ? '100%' : '50%',
-                    }}
-                    html={loginInfo.widgetFooterText}
-                  />
-                )}
-              </>
-            )}
+              </Box>
+            </B3Spin>
           </Box>
-        </B3Spin>
-      </LoginContainer>
-    </B3Card>
+        </Box>
+        {/* Footer */}
+        <Box
+          sx={{
+            padding: '15px',
+            textAlign: 'center',
+            borderBottomLeftRadius: '8px',
+            borderBottomRightRadius: '8px',
+            width: '100%',
+            height: '4.166666666666667vw',
+            marginTop: 'auto',
+            display: isTablet ? 'none' : 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#F1EBFF',
+          }}
+        >
+          <Typography variant="body2" sx={{
+            fontFamily: 'Inter',
+            fontWeight: 500,
+            fontSize: 'clamp(14px, 1.0416666666666667vw, 20px)',
+            lineHeight: '1.0416666666666667vw',
+            color: '#191919',
+            opacity: 1,
+            marginRight: '3.125vw',
+            letterSpacing: '0px',
+            display: 'block',
+          }}>
+            Having trouble logging in?{' '}
+
+          </Typography>
+          <Typography variant="body2" sx={{
+            fontFamily: 'Inter',
+            fontWeight: 500,
+            fontSize: 'clamp(14px, 1.0416666666666667vw, 20px)',
+            lineHeight: '1.0416666666666667vw',
+            color: '#4C4C4C',
+            opacity: '1',
+            letterSpacing: '0px',
+          }}>
+
+            <span role="img" aria-label="phone">
+              📞
+            </span>{' '}
+            Call us @ <a style={{ color: 'rgb(74, 37, 170)', textDecoration: 'underline' }} href='tel:888-362-0750'>888-362-0750</a>
+
+          </Typography>
+        </Box>
+      {/* </B3Card> */}
+    </Container>
   );
 }

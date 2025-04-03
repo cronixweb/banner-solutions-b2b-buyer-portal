@@ -20,6 +20,7 @@ import {
   GetFilterMoreListProps,
   ShoppingListsItemsProps,
 } from './config';
+import { Box } from '@mui/material';
 
 interface AddEditUserProps {
   renderList: () => void;
@@ -149,15 +150,29 @@ function AddEditShoppingLists(
       handleLeftClick={handleCancelClick}
       handRightClick={handleAddUserClick}
       loading={addUpdateLoading}
+      maxWidth='lg'
       note='Adding to a Project allows you to create a project specific list of products. You can quick buy this list, duplicate it for other projects and keep it handy for similar project requirements. You can view all your projects in My Dashboard.'
     >
-      <B3CustomForm
-        formFields={usersFiles}
-        errors={errors}
-        control={control}
-        getValues={getValues}
-        setValue={setValue}
-      />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            width: '400px',
+          }}
+        >
+          <B3CustomForm
+            formFields={usersFiles}
+            errors={errors}
+            control={control}
+            getValues={getValues}
+            setValue={setValue}
+          />
+        </Box>
+      </Box>
     </B3Dialog>
   );
 }

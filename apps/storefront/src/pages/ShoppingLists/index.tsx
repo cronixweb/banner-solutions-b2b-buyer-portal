@@ -271,7 +271,7 @@ function ShoppingLists({ isDashBoard }: {isDashBoard? : boolean}) {
           <Box
             sx={{
               display: 'flex',
-              justifyContent: `${isMobile ? 'center%' : 'start'}`,
+              justifyContent: `${isMobile ? 'center%' : 'center'}`,
               width: `${isMobile ? '100%' : '450px'}`,
               height: '100%',
             }}

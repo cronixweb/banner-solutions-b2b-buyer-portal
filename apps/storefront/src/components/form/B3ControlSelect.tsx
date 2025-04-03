@@ -4,6 +4,7 @@ import { useB3Lang } from '@b3/lang';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 
 import Form from './ui';
+import { KeyboardArrowDown } from '@mui/icons-material';
 
 export default function B3ControlSelect({ control, errors, ...rest }: Form.B3UIProps) {
   const {
@@ -82,9 +83,15 @@ export default function B3ControlSelect({ control, errors, ...rest }: Form.B3UIP
             {...muiAttributeProps}
             {...onChangeProps}
             size={size}
+            IconComponent={KeyboardArrowDown}
             error={!!errors[name]}
+            SelectDisplayProps={{
+              background: 'white',
+            }}
             sx={{
               ...extraPadding,
+              background: 'white',
+              border: '1px solid #cccccc',
             }}
           >
             {options?.length &&

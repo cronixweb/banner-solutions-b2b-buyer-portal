@@ -421,6 +421,24 @@ function ShoppingListDetails({ setOpenPage }: PageProps) {
           customColor={primaryColor}
         />
 
+        {!isReadForApprove &&
+          (allowJuniorPlaceOrder || productQuoteEnabled || !isJuniorApprove) && (
+            <ShoppingDetailFooter
+              shoppingListInfo={shoppingListInfo}
+              allowJuniorPlaceOrder={allowJuniorPlaceOrder}
+              checkedArr={checkedArr}
+              selectedSubTotal={calculateSubTotal(checkedArr)}
+              setLoading={setIsRequestLoading}
+              setDeleteOpen={setDeleteOpen}
+              setValidateFailureProducts={setValidateFailureProducts}
+              setValidateSuccessProducts={setValidateSuccessProducts}
+              isB2BUser={isB2BUser}
+              customColor={primaryColor}
+              isCanEditShoppingList={isCanEditShoppingList}
+              role={role}
+            />
+          )}
+
         <Grid
           container
           spacing={2}
@@ -504,24 +522,6 @@ function ShoppingListDetails({ setOpenPage }: PageProps) {
             )}
           </Grid>
         </Grid>
-
-        {!isReadForApprove &&
-          (allowJuniorPlaceOrder || productQuoteEnabled || !isJuniorApprove) && (
-            <ShoppingDetailFooter
-              shoppingListInfo={shoppingListInfo}
-              allowJuniorPlaceOrder={allowJuniorPlaceOrder}
-              checkedArr={checkedArr}
-              selectedSubTotal={calculateSubTotal(checkedArr)}
-              setLoading={setIsRequestLoading}
-              setDeleteOpen={setDeleteOpen}
-              setValidateFailureProducts={setValidateFailureProducts}
-              setValidateSuccessProducts={setValidateSuccessProducts}
-              isB2BUser={isB2BUser}
-              customColor={primaryColor}
-              isCanEditShoppingList={isCanEditShoppingList}
-              role={role}
-            />
-          )}
       </Box>
 
       <ReAddToCart

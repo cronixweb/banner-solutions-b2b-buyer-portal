@@ -49,10 +49,11 @@ function B3FilterSearch({
   }, [searchValue]);
 
   return (
+    <>
     <Paper
       component="div"
       sx={{
-        p: '2px 4px',
+        p: '0 4px 10px 0',
         display: 'flex',
         alignItems: 'center',
         width: w,
@@ -63,16 +64,9 @@ function B3FilterSearch({
         borderBottomLeftRadius: '0',
         borderBottomRightRadius: '0',
         borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
-        backgroundColor: searchBGColor,
       }}
     >
-      <SearchIcon
-        sx={{
-          p: '10px',
-          color: 'rgba(0, 0, 0, 0.54)',
-          fontSize: '2.7rem',
-        }}
-      />
+
       <InputBase
         sx={{
           ml: 1,
@@ -104,7 +98,18 @@ function B3FilterSearch({
           )
         }
       />
+      <SearchIcon
+        sx={{
+          p: '6px 10px 14px 10px',
+          color: 'rgba(0, 0, 0, 0.8)',
+          fontSize: '2.5rem',
+          marginLeft: '-5px',
+        }}
+      />
     </Paper>
+
+    
+    </>
   );
 }
 

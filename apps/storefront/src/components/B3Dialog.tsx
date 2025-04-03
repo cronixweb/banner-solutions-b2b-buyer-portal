@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode, useRef } from 'react';
 import { useB3Lang } from '@b3/lang';
 import {
+  Alert,
   Box,
   Breakpoint,
   Dialog,
@@ -18,6 +19,7 @@ import { useAppSelector } from '@/store';
 
 import CustomButton from './button/CustomButton';
 import B3Spin from './spin/B3Spin';
+import { Close } from '@mui/icons-material';
 
 export interface B3DialogProps<T> {
   customActions?: () => ReactElement;
@@ -42,6 +44,7 @@ export interface B3DialogProps<T> {
   dialogSx?: SxProps<Theme>;
   dialogWidth?: string;
   restDialogParams?: Omit<DialogProps, 'open' | 'onClose'>;
+  note?: string;
 }
 
 export default function B3Dialog<T>({
@@ -66,6 +69,7 @@ export default function B3Dialog<T>({
   fullWidth = false,
   disabledSaveBtn = false,
   dialogWidth = '',
+  note,
   restDialogParams,
 }: B3DialogProps<T>) {
   const container = useRef<HTMLInputElement | null>(null);
@@ -118,29 +122,79 @@ export default function B3Dialog<T>({
         sx={customStyle}
         {...restDialogParams}
       >
+        <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          pt: 2,
+          pr: 4,
+          cursor: 'pointer'
+        }}>
+          <Close onClick={() => handleCloseClick('')} />
+        </Box>
+
         {title && (
           <DialogTitle
+            fontSize={28}
             sx={
-              isShowBordered
-                ? {
-                    borderBottom: '1px solid #D9DCE9',
-                    mb: 2,
-                  }
-                : {}
+              {
+                mt: 3,
+                textAlign: 'center',
+              }
             }
             id="alert-dialog-title"
           >
             {title}
           </DialogTitle>
         )}
+
+      { note && <Alert 
+          severity='warning'
+          icon={false}
+          sx={{
+            color: '#000000',
+            marginLeft: 24,
+            marginRight: 24,
+            backgroundColor: '#FFECCC',
+            mb: 2
+          }}
+        >
+          <strong>Note:</strong> {note}
+        </Alert>}
         <DialogContent
           sx={{
             ...dialogContentSx,
           }}
         >
           {children}
+
         </DialogContent>
-        <DialogActions
+
+      {showRightBtn && <Box 
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          mt: 3,
+          mb: 4,
+        }}>
+          <CustomButton
+            variant='contained'
+            size='large'
+            sx={{
+              height: 48,
+              minWidth: 200,
+              textTransform: 'none',
+              fontSize: 13
+            }}
+            onClick={handleSaveClick}
+            autoFocus
+            disabled={disabledSaveBtn || loading}
+          >
+            {rightSizeBtn || b3Lang('global.dialog.save')}
+          </CustomButton>
+        </Box>}
+        
+        {/* <DialogActions
           sx={
             isShowBordered
               ? {
@@ -183,7 +237,7 @@ export default function B3Dialog<T>({
               )}
             </>
           )}
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
     </Box>
   );

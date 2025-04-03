@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useB3Lang } from '@b3/lang';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import B3Dialog from '@/components/B3Dialog';
 import B3Filter from '@/components/filter/B3Filter';
@@ -49,7 +49,7 @@ function useData() {
   };
 }
 
-function ShoppingLists() {
+function ShoppingLists({ isDashBoard }: {isDashBoard? : boolean}) {
   const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleteItem, setDeleteItem] = useState<null | ShoppingListsItemsProps>(null);
@@ -106,8 +106,7 @@ function ShoppingLists() {
     customButtonStyle: {
       fontSize: '15px',
       fontWeight: '500',
-      width: '140px',
-      padding: '0',
+      width: '19vw',
     },
   };
   const statusPermissions = !submitShoppingListPermission ? [0, 40] : '';
@@ -213,14 +212,23 @@ function ShoppingLists() {
           flex: 1,
         }}
       >
-        <B3Filter
-          showB3FilterMoreIcon={isB2BUser}
-          filterMoreInfo={filterMoreInfo}
-          handleChange={handleChange}
-          handleFilterChange={handleFilterChange}
-          customButtonConfig={customItem}
-          handleFilterCustomButtonClick={handleAddShoppingListsClick}
-        />
+        {!isDashBoard &&
+        <>
+          <Typography variant="h5"
+            sx={{
+              marginBottom: '30px',
+              fontWeight: '500',
+            }}>My Projects</Typography>
+
+          <B3Filter
+            showB3FilterMoreIcon={isB2BUser}
+            filterMoreInfo={filterMoreInfo}
+            handleChange={handleChange}
+            handleFilterChange={handleFilterChange}
+            customButtonConfig={customItem}
+            handleFilterCustomButtonClick={handleAddShoppingListsClick}
+          />
+        </>}
         <B3PaginationTable
           columnItems={[]}
           ref={paginationTableRef}
@@ -228,7 +236,7 @@ function ShoppingLists() {
           getRequestList={fetchList}
           searchParams={filterSearch}
           isCustomRender
-          itemXs={isExtraLarge ? 3 : 4}
+          itemXs={isExtraLarge ? 2 : 3}
           requestLoading={setIsRequestLoading}
           renderItem={(row) => (
             <ShoppingListsCard
@@ -263,7 +271,7 @@ function ShoppingLists() {
           <Box
             sx={{
               display: 'flex',
-              justifyContent: `${isMobile ? 'center%' : 'start'}`,
+              justifyContent: `${isMobile ? 'center%' : 'center'}`,
               width: `${isMobile ? '100%' : '450px'}`,
               height: '100%',
             }}

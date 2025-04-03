@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useB3Lang } from '@b3/lang';
 import styled from '@emotion/styled';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -31,7 +30,7 @@ export interface OrderItemCardProps {
 const Flex = styled('div')(() => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
+  justifyContent: 'end',
 }));
 
 const FontBold = styled(Typography)(() => ({
@@ -99,11 +98,14 @@ function ShoppingListsCard(props: OrderItemCardProps) {
   }, [shoppingList, isB2BUser]);
 
   return (
-    <Card
+    <Box
       key={shoppingList.id}
       sx={{
         '& .b2b-card-content': {
           paddingBottom: '16px',
+          background:'#F8F8F8',
+          p: '15px 12px 12px 24px',
+          borderRadius: '4px',
         },
       }}
     >
@@ -113,20 +115,85 @@ function ShoppingListsCard(props: OrderItemCardProps) {
           color: '#313440',
         }}
       >
+        <Flex>
+          
+          <Box
+            sx={{
+              display: `${isPermissions ? 'block' : 'none'}`,
+            }}
+          >
+            {/* {!getEditPermissions(shoppingList.status) && isCanEditShoppingList && (
+              <IconButton
+                aria-label="edit"
+                size="small"
+                color='primary'
+                sx={{
+                  marginRight: '8px',
+                }}
+                onClick={() => {
+                  onEdit(shoppingList);
+                }}
+              >
+                <EditIcon fontSize="inherit" />
+              </IconButton>
+            )} */}
+
+            <IconButton
+              aria-label="duplicate"
+              size="small"
+              color='primary'
+              onClick={() => {
+                onCopy(shoppingList);
+              }}
+            >
+              <ContentCopyIcon fontSize="inherit"
+                sx={{
+                  p: '1px'
+                }}
+              />
+            </IconButton>
+            
+            {!getDeletePermissions(shoppingList.status) && isCanEditShoppingList && (
+              <IconButton
+                aria-label="delete"
+                color='primary'
+                size="small"
+                onClick={() => {
+                  onDelete(shoppingList);
+                }}
+              >
+                <DeleteIcon fontSize="inherit" />
+              </IconButton>
+            )}
+          </Box>
+        </Flex>
         <Typography
-          variant="h5"
+          variant="h6"
           sx={{
             color: 'rgba(0, 0, 0, 0.87)',
             width: '100%',
             wordBreak: 'break-all',
+            fontSize: '15px',
+            fontWeight: '600',
           }}
         >
           {shoppingList.name}
         </Typography>
         <Box
           sx={{
+            mb: '10px',
+            fontSize: '10px',
+            fontStyle: 'italic',
+            fontWeight: '400',
+          }}
+        >
+           Last saved on {String(displayFormat(shoppingList.updatedAt))}
+        </Box>
+        <Box
+          sx={{
             pt: '8px',
             pb: '20px',
+            fontSize: '12px',
           }}
         >
           {isB2BUser &&
@@ -150,78 +217,50 @@ function ShoppingListsCard(props: OrderItemCardProps) {
           </Box>
 
           {isB2BUser && (
-            <FlexItem>
-              <FontBold>{b3Lang('shoppingLists.card.createdBy')}</FontBold>
-              {shoppingList.customerInfo.firstName} {shoppingList.customerInfo.lastName}
+            <FlexItem
+            sx={{
+              mb: '8px',
+            }}>
+              {b3Lang('shoppingLists.card.createdBy')}&nbsp;
+              <FontBold fontSize={'12px'}>{shoppingList.customerInfo.firstName} {shoppingList.customerInfo.lastName}</FontBold>
             </FlexItem>
           )}
-          <FlexItem>
-            <FontBold>{b3Lang('shoppingLists.card.products')}</FontBold>
-            {shoppingList.products.totalCount}
+          
+          <FlexItem
+            sx={{
+              mb: '8px',
+            }}>
+            {b3Lang('shoppingLists.card.lastActivity')}&nbsp;
+            <FontBold fontSize={'12px'}>{`${displayFormat(shoppingList.updatedAt)}`}</FontBold>
           </FlexItem>
-          <FlexItem>
-            <FontBold>{b3Lang('shoppingLists.card.lastActivity')}</FontBold>
-            {`${displayFormat(shoppingList.updatedAt)}`}
+
+          <FlexItem
+            sx={{
+              mb: '8px',
+            }}>
+            Total Products:&nbsp;
+            <FontBold fontSize={'12px'}>{shoppingList.products.totalCount}</FontBold>
           </FlexItem>
+
         </Box>
-        <Flex>
-          <CustomButton
+
+        <CustomButton
             sx={{
               m: '0 0 0 -8px',
               minWidth: 0,
+              textTransform: 'none',
+              fontSize: '12px',
             }}
-            variant="text"
             onClick={() => goToDetail(shoppingList)}
           >
-            {b3Lang('shoppingLists.card.view')}
+            View Project
+            <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 9,6 9,7 13,11 13,12 9,16 9,17 10,17 15,12 15,11 10,6" fill="#4a25a9" stroke='#4a25a9' strokeWidth='1px'/>
+            </svg>
           </CustomButton>
-          <Box
-            sx={{
-              display: `${isPermissions ? 'block' : 'none'}`,
-            }}
-          >
-            {!getEditPermissions(shoppingList.status) && isCanEditShoppingList && (
-              <IconButton
-                aria-label="edit"
-                size="medium"
-                sx={{
-                  marginRight: '8px',
-                }}
-                onClick={() => {
-                  onEdit(shoppingList);
-                }}
-              >
-                <EditIcon fontSize="inherit" />
-              </IconButton>
-            )}
 
-            <IconButton
-              aria-label="duplicate"
-              size="medium"
-              sx={{
-                marginRight: '8px',
-              }}
-              onClick={() => {
-                onCopy(shoppingList);
-              }}
-            >
-              <ContentCopyIcon fontSize="inherit" />
-            </IconButton>
-            {!getDeletePermissions(shoppingList.status) && isCanEditShoppingList && (
-              <IconButton
-                aria-label="delete"
-                size="medium"
-                onClick={() => {
-                  onDelete(shoppingList);
-                }}
-              >
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
-            )}
-          </Box>
-        </Flex>
       </CardContent>
-    </Card>
+    </Box>
   );
 }
 

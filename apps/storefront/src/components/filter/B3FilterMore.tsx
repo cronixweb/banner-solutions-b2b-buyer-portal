@@ -13,6 +13,7 @@ import CustomButton from '../button/CustomButton';
 import { getContrastColor, getHoverColor } from '../outSideComponents/utils/b3CustomStyles';
 
 import B3FilterPicker from './B3FilterPicker';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 const includesFilterType = ['roleAutocomplete'];
 
@@ -38,6 +39,8 @@ interface B3FilterMoreProps<T, Y> {
   onChange?: (val: Y) => void;
   isShowMore?: boolean;
   resetFilterInfo?: () => void;
+  handleFilterClick?: () => void;
+  isFilterOpen?: boolean;
 }
 
 interface PickerRefProps extends HTMLInputElement {
@@ -52,6 +55,8 @@ function B3FilterMore<T, Y>({
   onChange,
   isShowMore = false,
   resetFilterInfo,
+  handleFilterClick,
+  isFilterOpen,
 }: B3FilterMoreProps<T, Y>) {
   const {
     state: {
@@ -95,9 +100,6 @@ function B3FilterMore<T, Y>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cacheData, open]);
 
-  const handleDialogClick = () => {
-    setOpen(true);
-  };
 
   const filterCounterVal = useMemo(() => {
     if (!filterCounter) return 0;
@@ -204,27 +206,80 @@ function B3FilterMore<T, Y>({
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-end',
           }}
         >
-          <Box onClick={handleDialogClick}>
+          <Box onClick={handleFilterClick}>
             {!isFiltering && (
-              <IconButton
-                aria-label="edit"
-                size="medium"
-                sx={{
-                  color: customColor,
-                  ':hover': {
-                    backgroundColor: getHoverColor('#FFFFFF', 0.1),
-                  },
-                  '& svg': {
-                    width: '32px',
-                    height: '32px',
-                  },
-                }}
+              // <IconButton
+              //   aria-label="edit"
+              //   size="medium"
+              //   sx={{
+              //     color: customColor,
+              //     ':hover': {
+              //       backgroundColor: getHoverColor('#FFFFFF', 0.1),
+              //     },
+              //     '& svg': {
+              //       width: '32px',
+              //       height: '32px',
+              //     },
+              //   }}
+              // >
+              //   <FilterListIcon />
+              // </IconButton>
+
+              <CustomButton
+              size="large"
+              variant="contained"
+              sx={{
+                p: '6px 10px',
+                marginRight: '20px',
+                background: "none",
+                boxShadow: "none",
+                border: "1px solid rgba(0,0,0,0.42)",
+                borderRadius: 1.5,
+                color: "black",
+                textTransform: "none",
+                fontSize: '14px',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.04)',
+                  boxShadow: 'none',
+                },
+              }}
+              onClick={handleFilterClick}
               >
-                <FilterListIcon />
-              </IconButton>
+                <FilterListIcon
+                  sx={{
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />&nbsp;
+                Filter Projects
+
+                {
+                  isFilterOpen ? 
+                  <KeyboardArrowUp
+                    sx={{
+                      ml:1,
+                      width: '20px',
+                      height: '20px',
+                      color: 'rgb(74, 37, 170)'
+                    }}
+                  />
+                    :
+                  <KeyboardArrowDown
+                    sx={{
+                      ml:1,
+                      width: '20px',
+                      height: '20px',
+                      color: 'rgb(74, 37, 170)'
+                    }}
+                  />
+                }
+
+              </CustomButton>
             )}
             {isFiltering && (
               <IconButton

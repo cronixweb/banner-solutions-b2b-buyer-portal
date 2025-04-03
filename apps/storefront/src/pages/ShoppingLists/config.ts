@@ -46,7 +46,7 @@ export interface GetFilterMoreListProps {
   options?: Array<ShoppingListStatusProps>;
   rows?: string | number;
   name: string;
-  label: string;
+  label?: string;
   required: boolean;
   default: string;
   fieldType: string;
@@ -55,6 +55,8 @@ export interface GetFilterMoreListProps {
   size: string;
   maxLength?: number;
   idLang?: string;
+  placeholder?: string;
+  hidden?: boolean;
 }
 
 export const useGetFilterShoppingListStatus = () => {
@@ -87,7 +89,7 @@ export const useGetFilterMoreList = () => {
   return (submitShoppingListPermission: boolean, createdByUsers: CreatedByUsers) => {
     const newCreatedByUsers =
       createdByUsers?.createdByUser?.results.map((item) => ({
-        createdBy: `${item.firstName} ${item.lastName} (${item.email})`,
+        createdBy: `${item.firstName} ${item.lastName}`,
       })) || [];
 
     return [
@@ -102,7 +104,7 @@ export const useGetFilterMoreList = () => {
           value: 'createdBy',
         },
         xs: 12,
-        variant: 'filled',
+        variant: 'outlined',
         size: 'small',
         label: b3Lang('global.shoppingLists.filter.createdBy'),
       },
@@ -126,23 +128,26 @@ export const getCreatedShoppingListFiles = (
 ): GetFilterMoreListProps[] => [
   {
     name: 'name',
-    label: b3Lang('shoppingLists.name'),
+    label: 'Create A New Project',
+    placeholder: 'Enter A New Project Name here',
     required: true,
     default: '',
     fieldType: 'text',
     xs: 12,
-    variant: 'filled',
-    size: 'small',
+    variant: 'outlined',
+    size: 'medium',
     maxLength: 200,
   },
   {
     name: 'description',
     label: b3Lang('shoppingLists.description'),
+    placeholder: 'Enter a short Description',
     required: false,
     default: '',
+    hidden: true,
     fieldType: 'multiline',
     xs: 12,
-    variant: 'filled',
+    variant: 'outlined',
     size: 'small',
     rows: 4,
     maxLength: 200,

@@ -36,6 +36,8 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
     fieldId,
     isEnterTrigger,
     handleEnterClick,
+    placeholder,
+    hidden
   } = rest;
 
   const b3Lang = useB3Lang();
@@ -63,7 +65,6 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
   const textField = {
     type: fieldType,
     name,
-    label,
     rows,
     disabled,
     multiline: fieldType === 'multiline',
@@ -71,6 +72,8 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
     fullWidth: fullWidth || true,
     required,
     size,
+    placeholder,
+    hidden
   };
 
   const inputProps = {
@@ -158,14 +161,15 @@ export default function B3ControlTextField({ control, errors, ...rest }: Form.B3
               {...textField}
               {...rest}
               sx={{
-                color: disabled ? 'rgba(0, 0, 0, 0.38)' : 'rgba(0, 0, 0, 0.6)',
-                ...sx,
-                '& input': {
-                  ...newExtraPadding,
-                },
-                '& textarea': {
-                  ...newExtraPadding,
-                },
+          color: disabled ? 'rgba(0, 0, 0, 0.38)' : 'rgba(0, 0, 0, 0.6)',
+          display: hidden ? 'none' : undefined,
+          ...sx,
+          '& input': {
+            ...newExtraPadding,
+          },
+          '& textarea': {
+            ...newExtraPadding,
+          },
               }}
               inputProps={muiAttributeProps}
               error={!!errors[name]}

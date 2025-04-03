@@ -45,7 +45,8 @@ const CompanyHierarchy = lazy(() => import('@/pages/CompanyHierarchy'));
 
 const routesMap: Record<string, LazyExoticComponent<(props: PageProps) => ReactElement>> = {
   '/dashboard': Dashboard,
-  '/orders': OrderList,
+  '/orders': HomePage,
+  '/allOrders': OrderList,
   '/company-orders': CompanyOrderList,
   '/invoice': Invoice,
   '/quotes': Quotes,

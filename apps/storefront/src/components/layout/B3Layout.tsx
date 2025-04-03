@@ -23,7 +23,7 @@ const SPECIAL_PATH_TEXTS = {
   '/company-orders': 'global.companyOrders.title',
 } as const;
 
-export default function B3Layout({ children }: { children: ReactNode }) {
+export default function B3Layout({ children, isDashboard }: { children: ReactNode, isDashboard?: boolean }) {
   const [isMobile] = useMobile();
   const isDesktopLimit = useMediaQuery('(min-width:1775px)');
 
@@ -117,19 +117,18 @@ export default function B3Layout({ children }: { children: ReactNode }) {
             minWidth: !isDesktopLimit ? '100%' : 1775,
             maxWidth: !isDesktopLimit ? '100%' : 1775,
             flexDirection: 'row',
-            p: '32px 63px 70px 63px',
+            p: isDashboard ? '' : '140px 147px 90px 147px',
           }}
         >
-          <B3CloseAppButton />
-          <Box
+          {isDashboard && <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
               width: '200px',
               displayPrint: 'none',
+              p: '0 30px 0 0',
             }}
           >
-            <B3Logo />
             <Box
               sx={{
                 pt: '24px',
@@ -137,7 +136,7 @@ export default function B3Layout({ children }: { children: ReactNode }) {
             >
               <B3Nav />
             </Box>
-          </Box>
+          </Box>}
 
           <Box
             sx={{
@@ -146,11 +145,11 @@ export default function B3Layout({ children }: { children: ReactNode }) {
               flexDirection: 'column',
               maxWidth: '1450px',
               width: '100%',
-              p: '0 0px 0px 50px',
+              p: '0 0px 0px 0px',
               ...overflowStyle,
             }}
           >
-            <B3MainHeader title={title} />
+            {/* <B3MainHeader title={title} /> */}
             <CompanyCredit />
             <Box
               component="main"

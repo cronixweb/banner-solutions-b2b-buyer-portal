@@ -31,7 +31,8 @@ import {
   sortKeys,
 } from './config';
 import { OrderItemCard } from './OrderItemCard';
-import { getOrders } from '@/shared/service/bannerApi/orders';
+import { getOrders, OrderItem } from '@/shared/service/bannerApi/orders';
+import CustomButton from '@/components/button/CustomButton';
 
 interface CompanyInfoProps {
   companyId: string;
@@ -45,18 +46,20 @@ interface CompanyInfoProps {
   bcId: string;
 }
 
-interface ListItem {
-  firstName: string;
-  lastName: string;
-  orderId: string;
-  poNumber?: string;
-  money: string;
-  totalIncTax: string;
-  status: string;
-  createdAt: string;
-  companyName: string;
-  companyInfo?: CompanyInfoProps;
-}
+// interface ListItem {
+//   firstName: string;
+//   lastName: string;
+//   orderId: string;
+//   poNumber?: string;
+//   money: string;
+//   totalIncTax: string;
+//   status: string;
+//   createdAt: string;
+//   companyName: string;
+//   companyInfo?: CompanyInfoProps;
+// }
+
+interface ListItem extends OrderItem {}
 
 interface SearchChangeProps {
   startValue?: string;
@@ -188,9 +191,71 @@ function Order({ isCompanyOrder = false, isDashBoard }: OrderProps) {
   }, [selectCompanyHierarchyId]);
 
   const fetchList: GetRequestList<Partial<FilterSearchProps>, ListItem> = async (params) => {
-    const { edges = [], totalCount } = isB2BUser
-      ? await getB2BAllOrders(params)
-      : await getBCAllOrders(params);
+    // const { edges = [], totalCount } = isB2BUser
+    //   ? await getB2BAllOrders(params)
+    //   : await getBCAllOrders(params);
+
+    console.log('params', params);
+    const orders = await getOrders("2022-10-26", "2023-06-26", [], 2);
+
+    if(!orders) {
+      return {
+        edges: [],
+        totalCount: 0
+      }
+    }
+
+    orders.value = orders?.value.sort((a: ListItem, b: ListItem) => {
+      switch (params.orderBy){
+
+        case "orderId": 
+          return Number(a.orderNumber) - Number(b.orderNumber);
+
+        case "-orderId": 
+          return Number(b.orderNumber) - Number(a.orderNumber);
+
+        case "orderDate": 
+          return new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime();
+        
+        case "-orderDate":
+          return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+        
+        case "poNumber":
+          return a.poNumber.localeCompare(b.poNumber);
+        
+        case "-poNumber":
+          return b.poNumber.localeCompare(a.poNumber);
+        
+        case "totalAmount": 
+          return a.unitPrice - b.unitPrice;
+        
+        case "-totalAmount": 
+          return b.unitPrice - a.unitPrice;
+        
+        case "orderedBy":
+          return a.contactName.localeCompare(b.contactName);
+        
+        case "-orderedBy":
+          return b.contactName.localeCompare(a.contactName);
+        
+        case "status":
+          return a.orderCancelled ? 1 : -1;
+        
+        case "-status":
+          return b.orderCancelled ? 1 : -1;
+        
+      }
+
+      return 0;  
+    }) || [];
+
+    const edges = 
+    isDashBoard ?
+      orders?.value.slice(0, 4) || []
+    :
+      orders?.value.slice(Number(params.offset), Number(params.offset) + Number(params.first)) || [] ;
+
+    const totalCount = isDashBoard ? 4 : orders?.value.length || 0;
 
     setAllTotal(totalCount);
     setIsAutoRefresh(false);
@@ -203,7 +268,7 @@ function Order({ isCompanyOrder = false, isDashBoard }: OrderProps) {
   const navigate = useNavigate();
 
   const goToDetail = (item: ListItem, index: number) => {
-    navigate(`/orderDetail/${item.orderId}`, {
+    navigate(`/orderDetail/${item.orderNumber}`, {
       state: {
         currentIndex: index,
         searchParams: filterData,
@@ -221,59 +286,125 @@ function Order({ isCompanyOrder = false, isDashBoard }: OrderProps) {
       title: b3Lang('orders.order'),
       width: '10%',
       isSortable: true,
+      render: (item: ListItem, index: number) => {
+        const { orderNumber } = item;
+
+        return <Box
+          sx={{
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            fontSize: '12px',
+          }}
+          onClick={() => {
+            if (index !== undefined) {
+              goToDetail(item, index);
+            }
+          }}
+        >{ orderNumber || '–'}</Box>;
+      }
     },
     {
-      key: 'companyName',
-      title: b3Lang('orders.company'),
+      key: 'orderDate',
+      title: b3Lang('orders.date'),
       width: '10%',
-      isSortable: false,
+      isSortable: true,
       render: (item: ListItem) => {
-        const { companyInfo } = item;
+        const { orderDate } = item;
 
-        return <Box>{companyInfo?.companyName || '–'}</Box>;
+        return <Box
+          sx={{
+            fontSize: '12px',
+          }}
+        >{ `${displayFormat(orderDate, true)}` || '–'}</Box>;
       },
     },
     {
       key: 'poNumber',
       title: b3Lang('orders.poReference'),
-      render: (item: ListItem) => <Box>{item.poNumber ? item.poNumber : '–'}</Box>,
+      render: (item: ListItem) => <Box
+        sx={{
+          fontSize: '12px',
+        }}
+      >{item.poNumber ? item.poNumber : '–'}</Box>,
       width: '10%',
       isSortable: true,
     },
     {
-      key: 'totalIncTax',
-      title: b3Lang('orders.grandTotal'),
+      key: 'totalAmount',
+      title: b3Lang('orders.orderAmount'),
       render: (item: ListItem) =>
-        item?.money
-          ? `${ordersCurrencyFormat(JSON.parse(JSON.parse(item.money)), item.totalIncTax)}`
-          : `${currencyFormat(item.totalIncTax)}`,
+        item?.salesTax
+          ? `${ordersCurrencyFormat(JSON.parse(JSON.parse(String(item.unitPrice))), item.salesTax)}`
+          : `${currencyFormat(item.unitPrice)}`,
       width: '8%',
       style: {
-        textAlign: 'right',
+        textAlign: 'left',
+        fontSize: '12px',
       },
       isSortable: true,
     },
     {
+      key: 'orderedBy',
+      title: b3Lang('orders.orderedBy'),
+      width: '10%',
+      isSortable: true,
+      render: (item: ListItem) => {
+        const { contactName } = item;
+
+        return <Box
+        sx={{
+          fontSize: '12px',
+        }}
+        >{contactName || '–'}</Box>;
+      },
+    },
+    {
       key: 'status',
       title: b3Lang('orders.orderStatus'),
-      render: (item: ListItem) => (
-        <OrderStatus text={getOrderStatusText(item.status, getOrderStatuses)} code={item.status} />
-      ),
+      render: (item: ListItem) => {
+        const getStatus = (item:ListItem): string => {
+          if (item.orderCancelled) 
+            return "Cancelled";
+            
+          return "Shipped"; // Default status if none are true
+        }
+        return <OrderStatus text={getOrderStatusText(getStatus(item), getOrderStatuses)} code={getStatus(item)} />
+      },
       width: '10%',
       isSortable: true,
     },
     {
       key: 'placedBy',
       title: b3Lang('orders.placedBy'),
-      render: (item: ListItem) => `${item.firstName} ${item.lastName}`,
+      render: (item: ListItem) => `${item.contactName}`,
       width: '10%',
+      style:{
+        fontSize: '12px',
+      },
       isSortable: true,
     },
     {
-      key: 'createdAt',
-      title: b3Lang('orders.createdOn'),
-      render: (item: ListItem) => `${displayFormat(Number(item.createdAt))}`,
-      width: '10%',
+      key: 'action',
+      title: '',
+      render: (item: ListItem, index: number) => {
+        return <CustomButton
+          variant='outlined'
+          color='primary'
+          size='small'
+          sx={{
+            textTransform: 'none',
+            fontWeight: 400,
+          }}
+          onClick={() => {
+            if (index !== undefined) {
+              goToDetail(item, index);
+            }
+          }}
+        >
+          {b3Lang('orders.view')}
+        </CustomButton>
+      },
+      width: '5%',
       isSortable: true,
     },
   ];
@@ -404,9 +535,10 @@ function Order({ isCompanyOrder = false, isDashBoard }: OrderProps) {
           sortDirection={order}
           orderBy={orderBy}
           sortByFn={handleSetOrderBy}
+          showPagination={!isDashBoard}
           renderItem={(row, index) => (
             <OrderItemCard
-              key={row.orderId}
+              key={row.orderNumber}
               item={row}
               index={index}
               allTotal={allTotal}
@@ -414,11 +546,11 @@ function Order({ isCompanyOrder = false, isDashBoard }: OrderProps) {
               isCompanyOrder={isCompanyOrder}
             />
           )}
-          onClickRow={(item, index) => {
-            if (index !== undefined) {
-              goToDetail(item, index);
-            }
-          }}
+          // onClickRow={(item, index) => {
+          //   if (index !== undefined) {
+          //     goToDetail(item, index);
+          //   }
+          // }}
           hover
         />
       </Box>

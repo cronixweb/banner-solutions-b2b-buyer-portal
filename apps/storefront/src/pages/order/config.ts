@@ -25,12 +25,13 @@ export interface FilterMoreProps {
 export const defaultSortKey = 'orderId';
 
 export const sortKeys = {
-  orderId: 'bcOrderId',
+  orderId: 'orderId',
+  orderDate: 'orderDate',
   poNumber: 'poNumber',
-  totalIncTax: 'totalIncTax',
+  totalAmount: 'totalAmount',
+  orderedBy: 'orderedBy',
   status: 'status',
   placedBy: 'placedBy',
-  createdAt: 'createdAt',
 };
 
 const b2bFilterSearch: FilterSearchProps = {

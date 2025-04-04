@@ -10,16 +10,9 @@ import { isB2BUserSelector, useAppSelector } from '@/store';
 import { currencyFormat, displayFormat } from '@/utils';
 
 import OrderStatus from './components/OrderStatus';
+import { OrderItem } from '@/shared/service/bannerApi/orders';
 
-interface ListItem {
-  orderId: string;
-  firstName: string;
-  lastName: string;
-  poNumber?: string;
-  status: string;
-  totalIncTax: string;
-  createdAt: string;
-}
+interface ListItem extends OrderItem {}
 
 export interface OrderItemCardProps {
   allTotal: number;
@@ -50,7 +43,7 @@ export function OrderItemCard({
   const navigate = useNavigate();
 
   const goToDetail = (item: ListItem) => {
-    navigate(`/orderDetail/${item.orderId}`, {
+    navigate(`/orderDetail/${item.orderNumber}`, {
       state: {
         currentIndex: index || 0,
         searchParams: filterData,
@@ -62,13 +55,13 @@ export function OrderItemCard({
 
   const getName = (item: ListItem) => {
     if (isB2BUser) {
-      return `by ${item.firstName} ${item.lastName}`;
+      return `by ${item.contactName}`;
     }
     return `by ${customer.firstName} ${customer.lastName}`;
   };
 
   return (
-    <Card key={item.orderId}>
+    <Card key={item.orderNumber}>
       <CardContent
         sx={{
           color: 'rgba(0, 0, 0, 0.6)',
@@ -88,7 +81,7 @@ export function OrderItemCard({
                 color: 'rgba(0, 0, 0, 0.87)',
               }}
             >
-              {`# ${item.orderId}`}
+              {`# ${item.orderNumber}`}
             </Typography>
             <Typography
               sx={{
@@ -100,7 +93,7 @@ export function OrderItemCard({
             </Typography>
           </Box>
           <Box>
-            <OrderStatus code={item.status} />
+            <OrderStatus code={item.orderCancelled ? 'cancelled' : 'Shipped'} />
           </Box>
         </Flex>
 
@@ -112,7 +105,7 @@ export function OrderItemCard({
             minHeight: '1.43em',
           }}
         >
-          {currencyFormat(item.totalIncTax)}
+          {currencyFormat(item.salesTax)}
         </Typography>
 
         <Box
@@ -130,7 +123,7 @@ export function OrderItemCard({
           >
             {getName(item)}
           </Typography>
-          <Typography>{`${displayFormat(item.createdAt)}`}</Typography>
+          <Typography>{`${displayFormat(item.orderDate, true)}`}</Typography>
         </Box>
       </CardContent>
     </Card>

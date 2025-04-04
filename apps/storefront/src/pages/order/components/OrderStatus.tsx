@@ -1,6 +1,5 @@
-import { B3Tag } from '@/components';
-
 import getOrderStatus from '../shared/getOrderStatus';
+import { Typography } from '@mui/material';
 
 interface OrderStatusProps {
   code: string;
@@ -13,8 +12,8 @@ export default function OrderStatus(props: OrderStatusProps) {
   const status = getOrderStatus(code);
 
   return status.name ? (
-    <B3Tag color={status.color} textColor={status.textColor}>
+    <Typography color={status.color} fontSize={12}>
       {text || status.name}
-    </B3Tag>
+    </Typography>
   ) : null;
 }

@@ -1,8 +1,10 @@
-interface Response {
-  value: Value[]
+import { ApiService } from "./getAuthToken"
+
+interface BannerOrdersResponse {
+  value: OrderItem[]
 }
 
-interface Value {
+export interface OrderItem {
   carrier: string
   contactId: number
   contactName: string
@@ -14,7 +16,7 @@ interface Value {
   lineNumber: number
   orderCancelled: boolean
   orderDate: string
-  orderNumber: number
+  orderNumber: string
   packingBasis: string
   parentOeLineUid: number
   poNumber: string
@@ -40,7 +42,7 @@ interface Value {
 export const getOrders = async (startDate: string, endDate: string, contactIds = [], customerId:number) => {
     
   const url = 'https://testapi2.bannersolutions.com/Orders/BigCommerceHistory';
-  const TOKEN = import.meta.env.VITE_BANNER_API_TOKEN;
+  const TOKEN = await ApiService.getApiToken();
   const headers = {
     'Accept': 'application/json',
     'Authorization': `Bearer ${TOKEN}`,
@@ -65,7 +67,7 @@ export const getOrders = async (startDate: string, endDate: string, contactIds =
           throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      const res:Response = await response.json(); 
+      const res:BannerOrdersResponse = await response.json(); 
       
       return await res;
   } catch (error) {

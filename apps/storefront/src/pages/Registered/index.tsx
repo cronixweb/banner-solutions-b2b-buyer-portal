@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useB3Lang } from '@b3/lang';
 import { Box, ImageListItem } from '@mui/material';
 
 import { B3Card } from '@/components';
 import B3Spin from '@/components/spin/B3Spin';
-import { useMobile, useScrollBar } from '@/hooks';
+import { useMobile, useScrollBar, useTablet } from '@/hooks';
 import { CustomStyleContext } from '@/shared/customStyleButton';
 import { GlobalContext } from '@/shared/global';
 import { getB2BAccountFormFields, getB2BCountries } from '@/shared/service/b2b';
-import { bcLogin } from '@/shared/service/bc';
 import { themeFrameSelector, useAppSelector } from '@/store';
 import { B3SStorage, loginJump } from '@/utils';
 import b2bLogger from '@/utils/b3Logger';
@@ -22,14 +21,13 @@ import { RegisteredContext } from './context/RegisteredContext';
 import {
   AccountFormFieldsItems,
   b2bAddressRequiredFields,
-  companyAttachmentsFields,
   getAccountFormFields,
   RegisterFieldsItems,
 } from './config';
 import RegisterContent from './RegisterContent';
-import RegisteredStep from './RegisteredStep';
 import { RegisteredContainer, RegisteredImage } from './styled';
 import { RegisterFields } from './types';
+import CustomBreadcrumbs from './CustomBreadCrumb';
 
 // 1 bc 2 b2b
 const formType: Array<number> = [1, 2];
@@ -37,13 +35,9 @@ const formType: Array<number> = [1, 2];
 function Registered(props: PageProps) {
   const { setOpenPage } = props;
 
-  const [activeStep, setActiveStep] = useState(0);
-
   const b3Lang = useB3Lang();
-  const [isMobile] = useMobile();
-
+  const [isMobile] = useTablet();
   const navigate = useNavigate();
-
   const IframeDocument = useAppSelector(themeFrameSelector);
 
   const {
@@ -94,7 +88,6 @@ function Registered(props: PageProps) {
         }
 
         const accountFormAllFields = formType.map((item: number) => getB2BAccountFormFields(item));
-
         const accountFormFields = await Promise.all(accountFormAllFields);
 
         const newB2bAccountFormFields: AccountFormFieldsItems[] = (
@@ -105,7 +98,6 @@ function Registered(props: PageProps) {
             formFields.isRequired = true;
             formFields.visible = true;
           }
-
           return fields;
         });
 
@@ -146,7 +138,7 @@ function Registered(props: PageProps) {
               return addressFields;
             },
           ) || [];
-        // accountLoginRegistration
+
         const { b2b, b2c } = accountLoginRegistration;
         const accountB2cEnabledInfo = b2c && !b2b;
         if (dispatch) {
@@ -156,19 +148,13 @@ function Registered(props: PageProps) {
               accountType: accountB2cEnabledInfo ? '2' : '1',
               isLoading: false,
               storeName,
-              // account
               contactInformation: [...(b2bAccountFormFields.contactInformation || [])],
               bcContactInformation: [...(bcAccountFormFields.contactInformation || [])],
               additionalInformation: [...(b2bAccountFormFields.additionalInformation || [])],
               bcAdditionalInformation: [...(bcAccountFormFields.additionalInformation || [])],
-              // detail
-              companyExtraFields: [],
-              companyInformation: [...(b2bAccountFormFields?.businessDetails || [])],
-              companyAttachment: [...companyAttachmentsFields(b3Lang)],
               addressBasicFields: [...newAddressInformationFields],
               bcAddressBasicFields: [...newBCAddressInformationFields],
               countryList: [...countries],
-              // password
               passwordInformation: [...(b2bAccountFormFields.password || [])],
               bcPasswordInformation: [...(bcAccountFormFields.password || [])],
             },
@@ -180,9 +166,7 @@ function Registered(props: PageProps) {
     };
 
     getBCAdditionalFields();
-    // disabling as we only need to run this once and values at starting render are good enough
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, accountLoginRegistration, storeName]);
 
   const getLoginData = () => {
     const emailAddress =
@@ -199,36 +183,6 @@ function Registered(props: PageProps) {
       emailAddress,
       password,
     };
-  };
-  const handleNext = async () => {
-    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
-  };
-
-  const clearRegisterInfo = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'all',
-        payload: {
-          accountType: '',
-          isLoading: false,
-          storeName: '',
-          submitSuccess: false,
-          contactInformation: [],
-          additionalInformation: [],
-          companyExtraFields: [],
-          companyInformation: [],
-          companyAttachment: [],
-          addressBasicFields: [],
-          addressExtraFields: [],
-          countryList: [],
-          passwordInformation: [],
-        },
-      });
-    }
   };
 
   const handleFinish = async () => {
@@ -250,25 +204,6 @@ function Registered(props: PageProps) {
       }
     } else {
       try {
-        const getBCFieldsValue = {
-          email: data.emailAddress,
-          pass: data.password,
-        };
-
-        const { data: bcData } = await bcLogin(getBCFieldsValue);
-
-        if (bcData?.login?.customer) {
-          B3SStorage.set('loginCustomer', {
-            emailAddress: bcData.login.customer.email,
-            phoneNumber: bcData.login.customer.phone,
-            ...bcData.login.customer,
-          });
-        }
-
-        await getCurrentCustomerInfo();
-
-        clearRegisterInfo();
-
         const isLoginLandLocation = loginJump(navigate);
 
         if (!isLoginLandLocation) return;
@@ -291,16 +226,10 @@ function Registered(props: PageProps) {
     });
   };
 
-  useEffect(() => {
-    IframeDocument?.body.scrollIntoView(true);
-    // disabling as we only need to run this when activeStep changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep]);
-
   useScrollBar(false);
 
   return (
-    <B3Card setOpenPage={setOpenPage}>
+    // <B3Card setOpenPage={setOpenPage}>
       <RegisteredContainer isMobile={isMobile}>
         <B3Spin isSpinning={isLoading} tip={b3Lang('global.tips.loading')} transparency="0">
           <Box
@@ -308,10 +237,13 @@ function Registered(props: PageProps) {
               display: 'flex',
               flexDirection: 'column',
               width: '100%',
-              alignItems: 'center',
+              // alignItems: 'center',
+              marginTop:isMobile ? '40px' : '100px'
             }}
-          >
-            {logo && (
+            >
+              {!isMobile &&
+              <CustomBreadcrumbs/>}
+            {/* {logo && (
               <RegisteredImage>
                 <ImageListItem
                   sx={{
@@ -324,19 +256,12 @@ function Registered(props: PageProps) {
                   <img src={`${logo}`} alt={b3Lang('global.tips.registerLogo')} loading="lazy" />
                 </ImageListItem>
               </RegisteredImage>
-            )}
-            <RegisteredStep activeStep={activeStep} backgroundColor={backgroundColor}>
-              <RegisterContent
-                activeStep={activeStep}
-                handleBack={handleBack}
-                handleNext={handleNext}
-                handleFinish={handleFinish}
-              />
-            </RegisteredStep>
+            )} */}
+            <RegisterContent handleFinish={handleFinish} backgroundColor={backgroundColor} />
           </Box>
         </B3Spin>
       </RegisteredContainer>
-    </B3Card>
+    // </B3Card>
   );
 }
 
